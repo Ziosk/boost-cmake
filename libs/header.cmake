@@ -12,10 +12,11 @@ else()
   set_target_properties(Boost_boost PROPERTIES INTERFACE_SYSTEM_INCLUDE_DIRECTORIES ${BOOST_SOURCE}    )
   set_target_properties(Boost_boost PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "$<BUILD_INTERFACE:${BOOST_SOURCE}>;$<INSTALL_INTERFACE:include>")
 endif()
-install(TARGETS Boost_boost DESTINATION lib EXPORT boost-libs)
 
 # Disable autolink
 set_property(TARGET Boost_boost APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS BOOST_ALL_NO_LIB=1)
 
 add_library(Boost::boost_imported INTERFACE IMPORTED)
 set_target_properties(Boost::boost_imported PROPERTIES INTERFACE_INCLUDE_DIRECTORIES "${BOOST_SOURCE}")
+
+install(TARGETS Boost_boost DESTINATION lib EXPORT ${BOOST_EXPORT_NAME})

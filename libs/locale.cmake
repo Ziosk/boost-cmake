@@ -59,7 +59,6 @@ _add_boost_lib(
 # Convenience interface library to link deps to both main library and tests
 add_library(Boost_locale_deps INTERFACE)
 target_link_libraries(Boost_locale PRIVATE Boost_locale_deps)
-install(TARGETS Boost_locale_deps DESTINATION lib EXPORT boost-libs)
 
 if(BOOST_LOCALE_ENABLE_ICU_BACKEND AND ICU_FOUND)
   target_sources(Boost_locale PRIVATE
@@ -139,6 +138,8 @@ if(BOOST_LOCALE_ENABLE_POSIX_BACKEND
     ${BOOST_SOURCE}/libs/locale/src/util/gregorian.cpp
   )
 endif()
+
+install(TARGETS Boost_locale_deps DESTINATION lib EXPORT ${BOOST_EXPORT_NAME})
 
 _add_boost_test(
   NAME locale_test

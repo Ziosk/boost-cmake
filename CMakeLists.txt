@@ -18,6 +18,7 @@ include(StandaloneBuild)
 include(PlatformDetect)
 include(AddBoostLib)
 include(AddBoostTest)
+include(ExportLibraries)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS TRUE)
 
@@ -27,6 +28,13 @@ if(USE_ANDROID)
   set(CMAKE_ASM_COMPILER_TARGET "${CMAKE_CXX_COMPILER_TARGET}")
 elseif( MSVC )
   string(APPEND CMAKE_CXX_FLAGS " /MP")
+endif()
+
+# Give libraries a "-debug" prefix when debug configuration is in use.
+# This allows side-by-side installation of debug and release libs,
+# which is mostly useful on Windows.
+if(NOT CMAKE_DEBUG_POSTFIX)
+    set(CMAKE_DEBUG_POSTFIX -debug)
 endif()
 
 set(BOOST_LIBS
@@ -83,4 +91,4 @@ if(USE_ANDROID)
   set_property(TARGET Boost_boost APPEND PROPERTY INTERFACE_COMPILE_DEFINITIONS BOOST_ASIO_DISABLE_THREAD_KEYWORD_EXTENSION)
 endif()
 
-include(ExportLibraries)
+_export_libraries()

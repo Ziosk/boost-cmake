@@ -7,15 +7,15 @@ function(_add_boost_lib)
   add_library(Boost_${BOOSTLIB_NAME} STATIC ${BOOSTLIB_SOURCES})
   add_library(Boost::${BOOSTLIB_NAME} ALIAS Boost_${BOOSTLIB_NAME})
   set_target_properties(Boost_${BOOSTLIB_NAME} PROPERTIES
-    OUTPUT_NAME "boost_${BOOSTLIB_NAME}"
-    FOLDER "Boost"
-    EXPORT_NAME "${BOOSTLIB_NAME}"
+    OUTPUT_NAME boost_${BOOSTLIB_NAME}-${BOOST_VERSION}
+    FOLDER Boost
+    EXPORT_NAME ${BOOSTLIB_NAME}
+    VERSION ${BOOST_VERSION}
   )
   if(NOT BOOST_STANDALONE)
     set_target_properties(Boost_${BOOSTLIB_NAME} PROPERTIES EXCLUDE_FROM_ALL 1)
   endif()
   target_link_libraries(Boost_${BOOSTLIB_NAME} PUBLIC Boost::boost)
-  install(TARGETS Boost_${BOOSTLIB_NAME} DESTINATION lib EXPORT boost-libs)
   if(MSVC)
     target_compile_options(Boost_${BOOSTLIB_NAME} PRIVATE /W0)
   else()
@@ -36,4 +36,13 @@ function(_add_boost_lib)
   if(BOOSTLIB_INCLUDE_PRIVATE)
     target_include_directories(Boost_${BOOSTLIB_NAME} PRIVATE ${BOOSTLIB_INCLUDE_PRIVATE})
   endif()
+
+  # Install targets. Must occur at the end once all target properties are
+  # set (include dirs, link libs, etc).
+  install(TARGETS Boost_${BOOSTLIB_NAME} EXPORT ${BOOST_EXPORT_NAME}
+    RUNTIME DESTINATION bin
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
+    INCLUDES DESTINATION ${BOOST_EXPORT_INCLUDE_PATH}
+  )
 endfunction()
